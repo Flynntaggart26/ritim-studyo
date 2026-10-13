@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
+  --color-zinc-950: #f2ebdf;
+  --color-zinc-900: #fbf6ec;
+  --color-zinc-800: #e4d9c8;
+  --color-zinc-700: #d5c7b2;
+  --color-zinc-600: #aa9b87;
+  --color-zinc-500: #827563;
+  --color-zinc-400: #6e6254;
+  --color-zinc-300: #5a5045;
+  --color-zinc-200: #473e34;
+  --color-zinc-100: #372f27;
+  --color-zinc-50: #fff9ee;
+  --color-amber-300: #bfcaaf;
+  --color-amber-400: #81927c;
+  --color-amber-500: #596f5b;
+  --color-amber-600: #465d4a;
+  --color-orange-300: #ead8bf;
+  --color-orange-400: #d2ae88;
+  --color-orange-500: #b98a62;
+  --color-orange-600: #986f50;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  background: #f2ebdf;
+  color: #372f27;
+}
+
+/* Warm paper surface with restrained ambient light */
+.bg-stage {
+  background-image:
+    radial-gradient(ellipse 55% 60% at 92% 14%, rgba(220, 190, 151, 0.23), transparent 70%),
+    radial-gradient(ellipse 48% 48% at 0% 0%, rgba(146, 157, 127, 0.12), transparent 72%);
+}
+
+.bg-grid {
+  background-image: none;
+}
+
+/* The previous component set used text-white for headings; on this light theme
+   those labels become graphite. Photo overlays use the explicit zinc-50 token. */
+.text-white {
+  color: #372f27;
+}
+
+.editorial-accent {
+  color: #6f7d62;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.eyebrow {
+  color: #85765f;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.soft-shadow {
+  box-shadow: 0 24px 70px -42px rgba(91, 70, 45, 0.34);
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-enter {
+  animation: hero-rise 650ms cubic-bezier(0.2, 0.65, 0.3, 1) both;
+}
+
+.hero-enter-delay {
+  animation-delay: 120ms;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 560ms cubic-bezier(0.2, 0.65, 0.3, 1), transform 560ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f2ebdf;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0c1a9;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b59c7a;
+}
+
+::selection {
+  background: #e6d6bf;
+  color: #372f27;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-enter,
+  .hero-enter-delay {
+    animation: none;
+  }
+}

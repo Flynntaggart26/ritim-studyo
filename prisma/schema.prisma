@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------
+// Auth (better-auth) tabloları
+// --------------------------------------
+
+model User {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  phone         String?
+  role          String   @default("STUDENT") // ADMIN | TEACHER | STUDENT
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions       Session[]
+  accounts       Account[]
+  teacherProfile TeacherProfile?
+  bookings       Booking[]       @relation("StudentBookings")
+}
+
+model Session {
+  id        String   @id
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}
+
+// --------------------------------------
+// Randevu sistemi tabloları
+// --------------------------------------
+
+model TeacherProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String   @default("Bateri Eğitmeni")
+  bio         String   @default("")
+  specialties String   @default("") // virgülle ayrılmış: "Rock, Funk, Jazz"
+  photoUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  lessonTypes    LessonType[]
+  availabilities Availability[]
+  blockedDates   BlockedDate[]
+  bookings       Booking[]
+}
+
+model LessonType {
+  id          String         @id @default(cuid())
+  teacherId   String
+  teacher     TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  title       String
+  description String         @default("")
+  durationMin Int
+  materials   String         @default("") // getirilmesi gereken kaynaklar
+  price       Int? // TL cinsinden
+  isActive    Boolean        @default(true)
+  bookings    Booking[]
+}
+
+// Hocanın haftalık tekrarlayan müsait saat aralıkları
+model Availability {
+  id        String         @id @default(cuid())
+  teacherId String
+  teacher   TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  dayOfWeek Int // 0=Pazar ... 6=Cumartesi
+  startMin  Int // gece yarısından itibaren dakika (örn. 14:00 = 840)
+  endMin    Int
+}
+
+// Hocanın belirli bir gün kapalı olduğu tarihler (tatil, özel durum)
+model BlockedDate {
+  id        String         @id @default(cuid())
+  teacherId String
+  teacher   TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  reason    String?
+}
+
+model Booking {
+  id           String         @id @default(cuid())
+  teacherId    String
+  teacher      TeacherProfile @relation(fields: [teacherId], references: [id])
+  lessonTypeId String
+  lessonType   LessonType     @relation(fields: [lessonTypeId], references: [id])
+  studentId    String?
+  student      User?          @relation("StudentBookings", fields: [studentId], references: [id])
+  guestName    String?
+  guestPhone   String?
+  guestEmail   String?
+  date         String // YYYY-MM-DD
+  startMin     Int
+  endMin       Int
+  status       String         @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  notes        String?
+  manageToken  String         @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+}
