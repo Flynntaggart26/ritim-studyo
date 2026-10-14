@@ -1,31 +1,45 @@
-# Ritim Stüdyo
+<div align="center">
 
-Ritim Stüdyo, bateri derslerini keşfetmek ve randevu oluşturmak için geliştirilmiş Türkçe bir web uygulamasıdır. Öğrenciler ders ve saat seçebilir; eğitmenler programlarını yönetebilir; yöneticiler eğitmenleri ve randevuları takip edebilir.
+# 🥁 Ritim Stüdyo
 
-**Yayın adresi:** [Ritim Stüdyo — Vercel](https://ritim-studyo-3qpft5ma8-egehanstudio.vercel.app)
+**Bateri derslerini keşfetmek ve kolayca randevu almak için Türkçe web uygulaması.**
 
-**Erişim:** Vercel dağıtım koruması açık olduğu için siteyi görüntülemek için Vercel hesabıyla giriş gerekebilir.
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![PostgreSQL + Prisma](https://img.shields.io/badge/PostgreSQL-Prisma-4169E1?logo=postgresql&logoColor=white)
+
+</div>
+
+Ritim Stüdyo; öğrencilerin dersleri ve eğitmenleri inceleyip randevu oluşturabildiği, eğitmenlerin programlarını yönetebildiği ve yöneticilerin stüdyo operasyonlarını takip edebildiği bir rezervasyon uygulamasıdır.
 
 ## Özellikler
 
-- Eğitmenleri, uzmanlık alanlarını ve ders türlerini görüntüleme
+- Eğitmen profilleri, uzmanlık alanları ve ders seçenekleri
 - Misafir veya öğrenci hesabıyla randevu oluşturma
-- Tek oda kapasitesine göre çakışmasız saat seçimi
+- Tek oda kapasitesine göre çakışma kontrolü
 - Öğrenci, eğitmen ve yönetici panelleri
-- Eğitmen müsaitliği, kapalı gün ve ders türü yönetimi
-- Randevu bilgilendirmeleri için e-posta desteği
+- Haftalık müsaitlik, kapalı gün ve ders yönetimi
+- Randevu durumu ve değişiklikleri için e-posta bildirimleri
 
 ## Teknoloji
 
-- Next.js 16 ve React 19
-- TypeScript
-- PostgreSQL ve Prisma
-- Better Auth
-- Tailwind CSS 4
+| Alan | Kullanılan teknoloji |
+| --- | --- |
+| Web uygulaması | Next.js 16, React 19, TypeScript |
+| Tasarım | Tailwind CSS 4 |
+| Veritabanı | PostgreSQL, Prisma |
+| Kimlik doğrulama | Better Auth |
+| E-posta | Resend (isteğe bağlı) |
 
-## Geliştirme ortamını hazırlama
+## Yerel geliştirme
 
-Gereksinimler: Node.js 20 veya üzeri ve erişilebilir bir PostgreSQL veritabanı.
+### Gereksinimler
+
+- Node.js 20 veya üzeri
+- Erişilebilir bir PostgreSQL veritabanı
+
+### Kurulum
 
 1. Bağımlılıkları yükleyin:
 
@@ -33,7 +47,7 @@ Gereksinimler: Node.js 20 veya üzeri ve erişilebilir bir PostgreSQL veritaban�
    npm install
    ```
 
-2. `.env.example` dosyasını `.env` adıyla kopyalayın. `DATABASE_URL` değerini PostgreSQL bağlantınızla değiştirin ve `BETTER_AUTH_SECRET` için en az 32 karakterlik rastgele bir değer belirleyin.
+2. `.env.example` dosyasını `.env` adıyla kopyalayın ve `DATABASE_URL` değerini PostgreSQL bağlantınızla değiştirin. `BETTER_AUTH_SECRET` için en az 32 karakterlik rastgele bir değer kullanın.
 
    Windows PowerShell:
 
@@ -47,7 +61,7 @@ Gereksinimler: Node.js 20 veya üzeri ve erişilebilir bir PostgreSQL veritaban�
    cp .env.example .env
    ```
 
-3. Yeni ve boş veritabanında şemayı oluşturup yerel örnek verileri ekleyin:
+3. Veritabanı tablolarını oluşturup yerel örnek verileri ekleyin:
 
    ```bash
    npm run db:push
@@ -60,44 +74,44 @@ Gereksinimler: Node.js 20 veya üzeri ve erişilebilir bir PostgreSQL veritaban�
    npm run dev
    ```
 
-`db:seed` örnek yönetici, eğitmen ve öğrenci hesapları oluşturur. Yalnızca geliştirme için kullanın; üretim ortamında çalıştırılmaz.
+`db:seed` yalnızca geliştirme ortamında kullanılabilir. Komut örnek yönetici, eğitmen ve öğrenci hesapları oluşturur; üretimde çalıştırılmaz.
 
-## SQLite verisini PostgreSQL'e taşıma
+## SQLite verisini PostgreSQL'e aktarma
 
-Mevcut `prisma/dev.db` dosyasındaki kayıtları korumak için aktarım sırasında `SQLITE_DATABASE_URL` değerini SQLite dosyasına, `DATABASE_URL` değerini ise **boş** PostgreSQL veritabanına ayarlayın. Aktarımdan önce `db:seed` çalıştırmayın.
+Mevcut `prisma/dev.db` verisini korumak için `.env` içindeki `SQLITE_DATABASE_URL` değerini SQLite dosyasına, `DATABASE_URL` değerini ise boş PostgreSQL veritabanına ayarlayın. Aktarım öncesinde `db:seed` çalıştırmayın.
 
 ```bash
 npm run db:push
 npm run db:migrate-sqlite
-npm run dev
 ```
 
-Aktarım kullanıcıları, oturumları, hesapları, doğrulamaları, eğitmen profillerini, dersleri, müsaitlikleri, kapalı günleri ve randevuları ilişkileriyle kopyalar. Kaynak SQLite dosyası değiştirilmez. Hedef veritabanındaki tablolardan herhangi biri doluysa aktarım başlamaz. Yeni PostgreSQL kurulumlarında bu adımı atlayın.
+Aktarım kullanıcı, oturum, hesap, doğrulama, eğitmen, ders, müsaitlik, kapalı gün ve randevu kayıtlarını ilişkileriyle kopyalar. Kaynak SQLite dosyası değiştirilmez. Hedef veritabanındaki tablolardan biri doluysa işlem başlamaz. Yeni veritabanı kurulumlarında bu adımı atlayın.
 
-## Ortam değişkenleri
+## Yapılandırma
 
-| Değişken | Açıklama |
-| --- | --- |
-| `DATABASE_URL` | PostgreSQL bağlantı adresi |
-| `BETTER_AUTH_SECRET` | Oturum ve kimlik doğrulama için gizli anahtar |
-| `BETTER_AUTH_URL` | Uygulamanın temel adresi; yerel geliştirme veya yayın adresi |
-| `APP_URL` | E-posta bildirimlerindeki bağlantıların temel adresi |
-| `SQLITE_DATABASE_URL` | İsteğe bağlı; SQLite aktarımı için kaynak dosyanın adresi |
-| `RESEND_API_KEY` | İsteğe bağlı; e-posta gönderimi için Resend anahtarı |
-| `EMAIL_FROM` | İsteğe bağlı; doğrulanmış gönderici adresi |
+| Değişken | Gerekli | Açıklama |
+| --- | --- | --- |
+| `DATABASE_URL` | Evet | PostgreSQL bağlantı adresi |
+| `BETTER_AUTH_SECRET` | Evet | Oturum ve kimlik doğrulama gizli anahtarı |
+| `BETTER_AUTH_URL` | Evet | Uygulamanın temel adresi |
+| `APP_URL` | Evet | E-posta bağlantılarında kullanılan temel adres |
+| `SQLITE_DATABASE_URL` | Hayır | SQLite aktarımı için kaynak veritabanı adresi |
+| `RESEND_API_KEY` | Hayır | Resend e-posta servisi anahtarı |
+| `EMAIL_FROM` | Hayır | Doğrulanmış gönderici adresi |
 
-E-posta anahtarı tanımlanmadığında geliştirme ortamındaki bildirimler konsola yazılır.
+Resend yapılandırılmadığında e-posta bildirimleri geliştirme ortamında konsola yazılır.
 
-## Kontroller
+## Proje kontrolleri
 
 ```bash
 npm run lint
 npx tsc --noEmit
+npm test
 npm run build
 ```
 
-## Yayınlama
+## Yayına hazırlık
 
-Uygulama PostgreSQL gerektirir ve Vercel gibi Node.js destekli bir platformda çalıştırılabilir. Yayın ortamında `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` ve `APP_URL` değişkenlerini tanımlayın. E-posta bildirimleri için ayrıca `RESEND_API_KEY` ve doğrulanmış `EMAIL_FROM` gerekir. Örnek seed hesaplarını ve parolalarını üretimde kullanmayın.
+Yayın ortamında PostgreSQL bağlantısı, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` ve `APP_URL` tanımlanmalıdır. E-posta bildirimleri kullanılacaksa Resend anahtarı ve doğrulanmış gönderici adresi de eklenmelidir. Örnek hesapları ve parolaları gerçek ortamda kullanmayın.
 
-Stüdyo adı, iletişim bilgileri, adres ve çalışma saatleri `src/lib/site.ts` dosyasından; stok görselleri ve kaynak bilgileri `public/images/stock/` klasöründen düzenlenebilir.
+Stüdyo adı, iletişim bilgileri, adres ve çalışma saatleri `src/lib/site.ts` dosyasından; görseller ve kaynak notları `public/images/stock/` klasöründen düzenlenebilir.

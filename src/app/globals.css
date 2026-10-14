@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --color-zinc-950: #f2ebdf;
   --color-zinc-900: #fbf6ec;
   --color-zinc-800: #e4d9c8;
