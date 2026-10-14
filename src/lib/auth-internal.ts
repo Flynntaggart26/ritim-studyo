@@ -9,7 +9,7 @@ import { prisma } from "./prisma";
  */
 export const authInternal = betterAuth({
   appName: "Ritim Stüdyo",
-  database: prismaAdapter(prisma, { provider: "sqlite" }),
+  database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,

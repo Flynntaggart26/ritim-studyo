@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "tsx --test tests/schedule.test.ts",
     "db:push": "prisma db push",
+    "db:migrate-sqlite": "prisma generate --schema prisma/schema.sqlite.prisma && tsx --env-file=.env scripts/migrate-sqlite-to-postgres.ts",
     "db:seed": "tsx --env-file=.env prisma/seed.ts"
   },
   "allowScripts": {

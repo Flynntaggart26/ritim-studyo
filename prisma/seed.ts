@@ -11,7 +11,9 @@ async function ensureUser(
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     if (existing.role !== role) {
-      await prisma.user.update({ where: { id: existing.id }, data: { role } });
+      throw new Error(
+        `Seed hesabı ${email} zaten ${existing.role} rolünde; rolü otomatik değiştirmiyorum.`
+      );
     }
     return existing.id;
   }
@@ -64,6 +66,10 @@ async function ensureTeacher(
 const min = (h: number, m = 0) => h * 60 + m;
 
 async function main() {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Demo seed üretim ortamında çalıştırılamaz.");
+  }
+
   console.log("🌱 Seed başlıyor...");
 
   // Admin

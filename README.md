@@ -4,7 +4,11 @@ Türkçe bateri stüdyosu sitesi ve randevu uygulaması. Ziyaretçiler hoca/ders
 
 ## Yerel geliştirme
 
-Gereksinimler: Node.js 20 veya üzeri.
+Gereksinimler: Node.js 20 veya üzeri ve PostgreSQL veritabanı.
+
+İlk kurulumda önce `.env.example` dosyasını `.env` olarak kopyalayın. `DATABASE_URL` değerini PostgreSQL bağlantınızla değiştirin. Windows PowerShell'de `Copy-Item .env.example .env`, macOS/Linux'ta `cp .env.example .env` kullanabilirsiniz. Sonra `BETTER_AUTH_SECRET` için rastgele bir gizli anahtar belirleyin.
+
+Yeni, boş bir PostgreSQL veritabanıyla başlıyorsanız:
 
 ```bash
 npm install
@@ -13,7 +17,16 @@ npm run db:seed
 npm run dev
 ```
 
-İlk kurulumda önce `.env.example` dosyasını `.env` olarak kopyalayın. Windows PowerShell'de `Copy-Item .env.example .env`, macOS/Linux'ta `cp .env.example .env` kullanabilirsiniz. Sonra `BETTER_AUTH_SECRET` için rastgele bir gizli anahtar belirleyin.
+Mevcut `prisma/dev.db` SQLite verisini koruyarak geçirmek için `.env` içindeki `SQLITE_DATABASE_URL` değerini kaynak dosyayı gösterecek şekilde bırakın ve `DATABASE_URL` değerini boş bir PostgreSQL veritabanına ayarlayın. Bu akışta **önce seed çalıştırmayın**. Şemayı oluşturup verileri aktarın:
+
+```bash
+npm install
+npm run db:push
+npm run db:migrate-sqlite
+npm run dev
+```
+
+Aktarım kullanıcı, oturum, hesap, hoca, ders, müsaitlik, kapalı gün ve randevu kayıtlarını ilişkileriyle kopyalar. SQLite kaynak dosyası değiştirilmez. Hedef veritabanında herhangi bir kayıt varsa aktarım başlamaz; böylece mevcut PostgreSQL verisinin üzerine yazılmaz. Aktarımdan sonra PostgreSQL'i kullanan uygulamayı açıp kayıtları kontrol edin. Yeni kurulumlarda bu aktarım adımını atlayabilirsiniz.
 
 Site: <http://localhost:3000>
 
@@ -29,6 +42,8 @@ Site: <http://localhost:3000>
 
 Bu hesaplar örnek veridir. Gerçek kullanıma almadan önce şifreleri değiştirin ve örnek hoca bilgilerini güncelleyin.
 
+`npm run db:seed` yalnızca geliştirme ortamında çalışır ve mevcut bir demo e-posta adresinin rolü beklenenden farklıysa kullanıcıyı değiştirmek yerine hata verir.
+
 ## Yapılandırma
 
 - Stüdyo adı, telefon, e-posta, adres, harita ve çalışma saatleri: `src/lib/site.ts`
@@ -40,7 +55,7 @@ Randevu akışında oda kapasitesi tek oda olarak uygulanır: herhangi bir hocan
 
 ## Yayınlama notu
 
-Yerel geliştirme için SQLite kullanılır. Uygulamayı Vercel gibi sunucusuz bir ortama yayınlamadan önce kalıcı PostgreSQL veritabanına geçin; SQLite dosyası sunucusuz dağıtımlarda kalıcı depolama olarak kullanılamaz. Yayın ortamında `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `APP_URL`, `RESEND_API_KEY` ve `EMAIL_FROM` değerlerini tanımlayın; örnek hesapları/şifreleri üretim ortamında kullanmayın.
+Uygulama PostgreSQL kullanır; Vercel Marketplace üzerinden Neon veritabanı bağlanabilir. Yayın ortamında `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` ve `APP_URL` değerlerini tanımlayın. E-posta bildirimleri için ayrıca `RESEND_API_KEY` ve doğrulanmış `EMAIL_FROM` gerekir. Örnek hesapları/şifreleri üretim ortamında kullanmayın.
 
 ## Kontroller
 
